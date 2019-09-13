@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/chapter2_9" />
+            <option value="$PROJECT_DIR$/connect" />
+            <option value="$PROJECT_DIR$/dbhelper" />
+            <option value="$PROJECT_DIR$/dialog" />
+            <option value="$PROJECT_DIR$/fragment" />
+            <option value="$PROJECT_DIR$/googlemap" />
+            <option value="$PROJECT_DIR$/googlemap1" />
+            <option value="$PROJECT_DIR$/inflation" />
+            <option value="$PROJECT_DIR$/intent" />
+            <option value="$PROJECT_DIR$/intent2" />
+            <option value="$PROJECT_DIR$/json" />
+            <option value="$PROJECT_DIR$/listview" />
+            <option value="$PROJECT_DIR$/listviewexample" />
+            <option value="$PROJECT_DIR$/mdd" />
+            <option value="$PROJECT_DIR$/myapplication" />
+            <option value="$PROJECT_DIR$/myflag" />
+            <option value="$PROJECT_DIR$/myservice" />
+            <option value="$PROJECT_DIR$/myservice2" />
+            <option value="$PROJECT_DIR$/myservice3" />
+            <option value="$PROJECT_DIR$/mysmsreceiver" />
+            <option value="$PROJECT_DIR$/mythread" />
+            <option value="$PROJECT_DIR$/network" />
+            <option value="$PROJECT_DIR$/parsingtest" />
+            <option value="$PROJECT_DIR$/permission2" />
+            <option value="$PROJECT_DIR$/recyclerview" />
+            <option value="$PROJECT_DIR$/toastmessage" />
+            <option value="$PROJECT_DIR$/toolbar" />
+            <option value="$PROJECT_DIR$/viewholderexam" />
+            <option value="$PROJECT_DIR$/volley" />
+            <option value="$PROJECT_DIR$/volley_read" />
+            <option value="$PROJECT_DIR$/webview" />
+            <option value="$PROJECT_DIR$/xmlpullparsing" />
+            <option value="$PROJECT_DIR$/xmltour" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

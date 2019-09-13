@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/bottom_home"
+        android:title="Home"
+        android:icon="@drawable/baseline_home_white_24dp"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/bottom_tran"
+        android:title="Tran"
+        android:icon="@drawable/baseline_translate_white_24dp"
+        android:enabled="true"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/bottom_tour"
+        android:title="Tour"
+        android:icon="@drawable/baseline_landscape_white_24dp"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/bottom_gps"
+        android:title="GPS"
+        android:icon="@drawable/baseline_mail_outline_white_24dp"
+        android:enabled="true"
+        app:showAsAction="ifRoom"
+        />
+</menu>

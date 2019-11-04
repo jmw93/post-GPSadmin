@@ -77,8 +77,9 @@ public class HotelInfoActivity extends AppCompatActivity {
         }
 
         public void reservation(){
-           String url=hotel_info.getHomepage();
-           tvLinkfy.setText("예약바로가기");
+        if(hotel_info.getHomepage() !=null) {
+            String url = hotel_info.getHomepage();
+            tvLinkfy.setText("예약바로가기");
             Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
                 @Override
                 public String transformUrl(Matcher match, String url) {
@@ -86,8 +87,10 @@ public class HotelInfoActivity extends AppCompatActivity {
                 }
             };
             Pattern pattern = Pattern.compile("예약바로가기");
-            Linkify.addLinks(tvLinkfy,pattern,url,null,mTransform);
-
+            Linkify.addLinks(tvLinkfy, pattern, url, null, mTransform);
+        }else{
+            tvLinkfy.setText("홈페이지 없음");
+        }
     }
 
          public void parsing() {

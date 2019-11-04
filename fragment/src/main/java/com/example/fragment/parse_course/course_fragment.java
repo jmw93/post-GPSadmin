@@ -58,8 +58,6 @@ public class course_fragment extends Fragment {
                 int contenttypeid =model.getContenttypeid();
                 mainActivity.sendcontenttypeid_course(contentid,contenttypeid);
 
-
-
             }
         });
 

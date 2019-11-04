@@ -82,5 +82,5 @@ public class tour_fragment extends Fragment {
 
 
         return view;
-    }
+}
 }

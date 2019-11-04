@@ -41,12 +41,12 @@ public class webViewActivity extends AppCompatActivity {
             public void onPageFinished(WebView view, String url) {
                 mwebView.loadUrl("javascript:(function() { " +
                         "document.getElementById('seoul-common-gnb').style.display='none';" + //상단 메뉴바
-                        "document.getElementsByClassName('wrapper-inner')[0].style.display='none'; " + //VISITSEOULNET 배너
-                        "document.getElementsByClassName('sub-detail-visual-wrap default')[0].style.display='none';"+ // 배너사진
-                        "document.getElementsByClassName('livere-wrap')[0].style.display='none';"+    //안내 삭제
-                        "document.getElementsByTagName('footer')[0].style.display='none';"+             //footer삭제
-                        "document.getElementsByClassName('service-menu-wrap')[0].style.display='none';"+ //최하단 서비스메뉴삭제
-                        "document.getElementsByClassName('right-content')[0].style.display='none';"+ //상세정보 (제작일/수정일 숨기기)
+                        "document.getElementsByClassName('wrapper-inner')[0].style.display='none'; " +
+                        "document.getElementsByClassName('sub-detail-visual-wrap default')[0].style.display='none';"+
+                        "document.getElementsByClassName('livere-wrap')[0].style.display='none';"+
+                        "document.getElementsByTagName('footer')[0].style.display='none';"+
+                        "document.getElementsByClassName('service-menu-wrap')[0].style.display='none';"+
+                        "document.getElementsByClassName('right-content')[0].style.display='none';"+
                         "})()");
             }
         }

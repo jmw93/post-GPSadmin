@@ -17,9 +17,9 @@ public class MypagerAdapter extends FragmentPagerAdapter {
 
         super(fm);
         mData = new ArrayList<>();
-        mData.add(new hotel_fragment());
         mData.add(new course_fragment());
         mData.add(new tour_fragment());
+        mData.add(new hotel_fragment());
 
 
     }
@@ -36,7 +36,7 @@ public class MypagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-
-            return (position+1)+"번째";
+            String name[] = {"코스추천","관광지","호텔"};
+            return name[position];
     }
 }

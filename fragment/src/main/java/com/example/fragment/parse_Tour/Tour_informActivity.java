@@ -1,5 +1,6 @@
 package com.example.fragment.parse_Tour;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -54,7 +55,7 @@ public class Tour_informActivity extends FragmentActivity {
     Imgdata loop_imgdata;
     Infodata infodata;
     URL originimgurl;
-    URL smallimgurl;
+    URL smallimageurl;
     Button button;
     ImageView image1;
     ImageView image2;
@@ -130,10 +131,15 @@ public class Tour_informActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 if(current_latitude !=0 && current_longitude != 0) {
-                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                            Uri.parse("https://maps.google.com/maps?saddr=" + current_latitude + "," + current_longitude + "&daddr=" + Lat + "," + Lng));
+                    try {
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                Uri.parse("https://maps.google.com/maps?saddr=" + current_latitude + "," + current_longitude + "&daddr=" + Lat + "," + Lng));
 
-                    startActivity(intent);
+                        startActivity(intent);
+                    }catch (ActivityNotFoundException e){
+                        Log.d("앱테스트","어플을 설치해주세요");
+                        Toast.makeText(Tour_informActivity.this, "어플을 설치 해주세요", Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     Toast.makeText(Tour_informActivity.this, "Loading...try again", Toast.LENGTH_SHORT).show();
                 }
@@ -171,16 +177,22 @@ public class Tour_informActivity extends FragmentActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        initinfo();
                         if(imgdatalist.size()>1) {
-                            image1.setImageBitmap(imgdatalist.get(0).getOriginimgurl());
-                            image2.setImageBitmap(imgdatalist.get(1).getOriginimgurl());
-                            image3.setImageBitmap(imgdatalist.get(2).getOriginimgurl());
-                            image4.setImageBitmap(imgdatalist.get(3).getOriginimgurl());
+                            if(imgdatalist.get(0).getOriginimgurl() !=null)
+                                image1.setImageBitmap(imgdatalist.get(0).getOriginimgurl());
+                            if(imgdatalist.get(1).getOriginimgurl() !=null)
+                                image2.setImageBitmap(imgdatalist.get(1).getSmallimageurl());
+                            if(imgdatalist.get(2).getOriginimgurl() !=null)
+                                image3.setImageBitmap(imgdatalist.get(2).getSmallimageurl());
+                            if(imgdatalist.get(3).getOriginimgurl() !=null)
+                                image4.setImageBitmap(imgdatalist.get(3).getSmallimageurl());
 
-                            initinfo();
+
                             Log.d("locationtest","위치:"+Lat+","+Lng);
                         } else{
-                            Toast.makeText(Tour_informActivity.this,"표시할 데이터가 없습니다",Toast.LENGTH_SHORT).show();
+                            image1.setVisibility(View.GONE);
+                            Toast.makeText(Tour_informActivity.this,"표시할 이미지가 없습니다",Toast.LENGTH_SHORT).show();
                         }
                         Log.d("parsing3",infodata.toString());
 
@@ -229,6 +241,25 @@ public class Tour_informActivity extends FragmentActivity {
                             break;
                         }
 
+                        if(startTag.equals("smallimageurl")){
+                            xpp.next();
+                            try{
+                                smallimageurl = new URL(xpp.getText());
+                                URLConnection conn = smallimageurl.openConnection();
+                                conn.connect();
+                                BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
+                                Bitmap bitmap = BitmapFactory.decodeStream(bis);
+                                bis.close();
+                                bitmap = Bitmap.createScaledBitmap(bitmap,150,100,true);
+                                Log.d("이미지파일테스트","가로:"+bitmap.getWidth()+"세로:"+bitmap.getHeight());
+                                imgdata.setSmallimageurl(bitmap);
+                            }catch(Exception e){
+                                Log.d("minwoo2",e.toString());
+
+                            }
+
+                            break;
+                        }
                         if(startTag.equals("originimgurl")){
                             xpp.next();
                             try{
@@ -238,29 +269,12 @@ public class Tour_informActivity extends FragmentActivity {
                                 BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
                                 Bitmap bitmap = BitmapFactory.decodeStream(bis);
                                 bis.close();
-                                imgdata.setOriginimgurl(bitmap);
-                            }catch(Exception e){
-                                Log.d("minwoo2",e.toString());
+                                bitmap = Bitmap.createScaledBitmap(bitmap,350,233,true);
 
-                            }
-
-                            break;
-                        }
-                        if(startTag.equals("smallimageurl")){
-                            xpp.next();
-                            try{
-                                smallimgurl = new URL(xpp.getText());
-                                URLConnection conn = smallimgurl.openConnection();
-                                conn.connect();
-                                BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
-                                BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inSampleSize=2;
-                                Bitmap bitmap = BitmapFactory.decodeStream(bis,null,options);
-                                bis.close();
                                 int width =bitmap.getWidth();
                                 int height= bitmap.getHeight();
-                                Log.d("imgtest","이미지사이즈:"+width+height);
-                                imgdata.setSmallimageurl(bitmap);
+                                Log.d("이미지파일테스트","축소오리지널이미지 사이즈:"+width+height);
+                                imgdata.setOriginimgurl(bitmap);
                             }catch(Exception e){
                                 Log.d("minwoo2",e.toString());
 
@@ -448,5 +462,11 @@ public class Tour_informActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         mFusedLocationClient.removeLocationUpdates(mLocationCallback);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
     }
 }

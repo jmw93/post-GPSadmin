@@ -1,9 +1,12 @@
 package com.example.fragment.Gps_btn3;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -28,27 +31,28 @@ public class MyService extends Service {
     String emailPassword;
     String recipient;
     int time;
+
     public MyService() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(mLocationCallback != null && mFusedLocationClient!= null) {
+        if (mLocationCallback != null && mFusedLocationClient != null) {
             stopLocationUpdates(); //중복실행 코드수정하기
         }
-        String settingtime= intent.getStringExtra("settingtime").replaceAll("[^0-9]", "");
-        time= Integer.parseInt(settingtime)*60000;
+        String settingtime = intent.getStringExtra("settingtime").replaceAll("[^0-9]", "");
+        time = Integer.parseInt(settingtime) * 60000;
         emailAddr = intent.getStringExtra("emailAddr");
         emailPassword = intent.getStringExtra("emailPassword");
         recipient = intent.getStringExtra("recipient");
-        Log.d("jmw93","이메일주소:"+emailAddr);
-        Log.d("jmw93","비밀번호:"+emailPassword);
-        Log.d("jmw93","상대방주소"+recipient);
+        Log.d("jmw93", "이메일주소:" + emailAddr);
+        Log.d("jmw93", "비밀번호:" + emailPassword);
+        Log.d("jmw93", "상대방주소" + recipient);
 
         request = new LocationRequest();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         request.setInterval(time);
-        request.setFastestInterval(50000);
+        request.setFastestInterval(5000);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
@@ -61,33 +65,30 @@ public class MyService extends Service {
                         final double Longitude = location.getLongitude();
 
                         try {
-                            String requestUrl ="https://www.google.com/search?q="+Latitude+"%2C"+Longitude+"&rlz=1C1QJDB_enKR784KR784&oq="+Latitude+"%2C"+Longitude+"&aqs=chrome..69i57.2903j1j4&sourceid=chrome&ie=UTF-8";
-                            URL locationurl=new URL(requestUrl);
-                            Log.d("jmw93","위도"+Latitude+"경도"+Longitude);
-                                    GMailSender gMailSender = new GMailSender(emailAddr,emailPassword);
-                                    Log.d("jmw93","인증메일코드"+gMailSender.getEmailCode());
-                                    //GMailSender.sendMail(제목, 본문내용, 받는사람);
+                            String requestUrl = "https://www.google.com/search?q=" + Latitude + "%2C" + Longitude + "&rlz=1C1QJDB_enKR784KR784&oq=" + Latitude + "%2C" + Longitude + "&aqs=chrome..69i57.2903j1j4&sourceid=chrome&ie=UTF-8";
+                            URL locationurl = new URL(requestUrl);
+                            Log.d("jmw93", "위도" + Latitude + "경도" + Longitude);
+                            GMailSender gMailSender = new GMailSender(emailAddr, emailPassword);
+                            Log.d("jmw93", "인증메일코드" + gMailSender.getEmailCode());
+                            //GMailSender.sendMail(제목, 본문내용, 받는사람);
 
-                                    gMailSender.sendMail("앱에서 발송:나의위치","아래 URL을 클릭하면 지도로 이동합니다. \n" +
-                                            "위도:"+Latitude+",경도:"+Longitude+"\n"+locationurl,recipient);
+                            gMailSender.sendMail("앱에서 발송:나의위치", "아래 URL을 클릭하면 지도로 이동합니다. \n" +
+                                    "위도:" + Latitude + ",경도:" + Longitude + "\n" + locationurl, recipient);
 
 
-                        }
-                                catch (SendFailedException e) {
+                        } catch (SendFailedException e) {
 
-                                    e.printStackTrace();
+                            e.printStackTrace();
 
-                                } catch (MessagingException e) {
+                        } catch (MessagingException e) {
 
-                                    e.printStackTrace();
-                                }
-                        catch (Exception e) {
+                            e.printStackTrace();
+                        } catch (Exception e) {
 
                             e.printStackTrace();
 
                         }
                     }
-
 
 
                 }
@@ -96,12 +97,13 @@ public class MyService extends Service {
 
         };
 
+
         mFusedLocationClient.requestLocationUpdates(
                 request,
                 mLocationCallback,
                 null);
 
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     @Override

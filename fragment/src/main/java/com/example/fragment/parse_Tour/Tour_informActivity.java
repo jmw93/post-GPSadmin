@@ -1,14 +1,19 @@
 package com.example.fragment.parse_Tour;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,6 +52,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class Tour_informActivity extends FragmentActivity {
+    int REQUEST_CODE_PERMISSIONS = 1000;
     private GoogleMap mMap;
     FrameLayout frameLayout;
     Double Lat;
@@ -89,7 +95,7 @@ public class Tour_informActivity extends FragmentActivity {
        request= new LocationRequest();
        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
        request.setInterval(1000);
-       request.setFastestInterval(0);
+       request.setFastestInterval(1000);
        mFusedLocationClient= LocationServices.getFusedLocationProviderClient(this);
        mLocationCallback = new LocationCallback(){
            @Override
@@ -103,10 +109,21 @@ public class Tour_informActivity extends FragmentActivity {
                }
            }
        };
-        mFusedLocationClient.requestLocationUpdates(
-                request,
-                mLocationCallback,
-                null);
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) !=PackageManager
+                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)  !=
+                PackageManager.PERMISSION_GRANTED){
+            //최초권한 실행
+            ActivityCompat.requestPermissions((Activity) this,
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_CODE_PERMISSIONS);
+
+        }else{
+
+            mFusedLocationClient.requestLocationUpdates(
+                    request,
+                    mLocationCallback,
+                    null);
+        }
 
         //지도버튼 리스너
         button_map.setOnClickListener(new View.OnClickListener() {
@@ -141,6 +158,7 @@ public class Tour_informActivity extends FragmentActivity {
                         Toast.makeText(Tour_informActivity.this, "어플을 설치 해주세요", Toast.LENGTH_SHORT).show();
                     }
                 }else{
+                    Log.d("GPStest",current_latitude+current_longitude+"위치");
                     Toast.makeText(Tour_informActivity.this, "Loading...try again", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -189,7 +207,6 @@ public class Tour_informActivity extends FragmentActivity {
                                 image4.setImageBitmap(imgdatalist.get(3).getSmallimageurl());
 
 
-                            Log.d("locationtest","위치:"+Lat+","+Lng);
                         } else{
                             image1.setVisibility(View.GONE);
                             Toast.makeText(Tour_informActivity.this,"표시할 이미지가 없습니다",Toast.LENGTH_SHORT).show();
@@ -203,6 +220,24 @@ public class Tour_informActivity extends FragmentActivity {
                 });
             }
         }).start();
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 1000:
+                if (ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) !=PackageManager
+                        .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)  !=
+                        PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this, "권한없음", Toast.LENGTH_SHORT).show();
+                }else{
+                    mFusedLocationClient.requestLocationUpdates(
+                            request,
+                            mLocationCallback,
+                            null);
+                }
+        }
 
     }
     public void initinfo(){

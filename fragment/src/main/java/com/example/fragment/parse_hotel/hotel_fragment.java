@@ -55,12 +55,9 @@ public class hotel_fragment extends Fragment {
     URL imgurl;
     Adapter adapter;
     LocationRequest request;
-    public LocationCallback mLocationCallback;
     Double mapX;
     Double mapY;
     public int REQUEST_CODE_PERMISSIONS= 1000;
-    FusedLocationProviderClient mFusedLocationClient;
-
     public hotel_fragment() {
 
     }
@@ -80,25 +77,12 @@ public class hotel_fragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("민우", "onCreateView()");
         request = new LocationRequest();
-        request.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        request.setInterval(50000);
-        request.setFastestInterval(5000);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
+
         ViewGroup view = (ViewGroup) inflater.inflate(R.layout.fragment_hotel_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult != null) {
-                    for (final Location location : locationResult.getLocations()) {
-                        final double Latitude = location.getLatitude();
-                        final double Longitude = location.getLongitude();
                         try {
-
-                            mapY = Latitude;
-                            mapX = Longitude;
+                            mapY = 37.632183;
+                            mapX = 127.079375;
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -114,26 +98,6 @@ public class hotel_fragment extends Fragment {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                }
-            }
-        };
-
-        if (ActivityCompat.checkSelfPermission(mainActivity,Manifest.permission.ACCESS_FINE_LOCATION) !=PackageManager
-                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity,Manifest.permission.ACCESS_COARSE_LOCATION)  !=
-                PackageManager.PERMISSION_GRANTED){
-            //최초권한 실행
-            ActivityCompat.requestPermissions((Activity) mainActivity,
-                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_CODE_PERMISSIONS);
-
-        }else{
-
-            mFusedLocationClient.requestLocationUpdates(
-                    request,
-                    mLocationCallback,
-                    null);
-        }
 
 
 
@@ -152,25 +116,6 @@ public class hotel_fragment extends Fragment {
         return view;
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case 1000:
-                if (ActivityCompat.checkSelfPermission(mainActivity,Manifest.permission.ACCESS_FINE_LOCATION) !=PackageManager
-                        .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mainActivity,Manifest.permission.ACCESS_COARSE_LOCATION)  !=
-                        PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(mainActivity, "권한없음", Toast.LENGTH_SHORT).show();
-                }else{
-                    mFusedLocationClient.requestLocationUpdates(
-                            request,
-                            mLocationCallback,
-                            null);
-                }
-        }
-
-    }
 
     //파싱메소드
     public void parsing() {
@@ -284,13 +229,7 @@ public class hotel_fragment extends Fragment {
         Log.d("민우", "onResume()");
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        Log.d("민우", "onPause()");
 
-    }
 
     @Override
     public void onDestroyView() {
